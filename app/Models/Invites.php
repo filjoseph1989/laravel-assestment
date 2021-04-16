@@ -10,6 +10,10 @@ class Invites extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email', 'token',
+        'email', 'token', 'pin'
+    ];
+
+    protected $casts = [
+        'pin' => 'integer'
     ];
 }
