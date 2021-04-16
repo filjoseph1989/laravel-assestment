@@ -20,3 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('invite', InviteController::class);
+Route::get('accept/{token}', [InviteController::class, 'processInvitation'])->name('process_invitation');
+Route::post('register', [InviteController::class, 'register'])->name('register');
