@@ -31,11 +31,15 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'user_name' => 'min:4|max:20'
+            'user_name' => 'min:4|max:20',
+            'avatar' => 'mimes:png,jpg'
         ]);
 
         $user = User::find($id);
         $parameters = self::cleanParameters($request->all());
+        extract($parameters);
+        $file = $avatar->store('public/avatar');
+        $parameters['avatar'] = $file;
 
         $user->update($parameters);
 
