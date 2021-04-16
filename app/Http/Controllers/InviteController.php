@@ -47,7 +47,7 @@ class InviteController extends Controller
             'user_name' => 'required|min:4|max:20',
             'password'  => 'required',
             'pin'       => 'required',
-            'avatar'    => 'required|mimes:png,jpg'
+            'avatar'    => 'mimes:png,jpg|dimensions:min_width=256,min_height=256'
         ]);
 
         $invite = Invites::where('pin', $request->pin)->first();

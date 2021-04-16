@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         $request->validate([
             'user_name' => 'min:4|max:20',
-            'avatar' => 'mimes:png,jpg'
+            'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256'
         ]);
 
         $user = User::find($id);
