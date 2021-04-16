@@ -30,7 +30,7 @@ class InviteCreated extends Mailable
     public function build()
     {
         return $this->from('admin@example-app.test')
-                    ->subject('You Been Invited!')
+                    ->subject('You Have Been Invited!')
                     ->view('emails.invite');
     }
 }
