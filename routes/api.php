@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InviteController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::resource('invite', InviteController::class);
 Route::get('accept/{token}', [InviteController::class, 'processInvitation'])->name('process_invitation');
 Route::post('register', [InviteController::class, 'register'])->name('register');
+
+Route::resource('invite', InviteController::class);
+Route::resource('user', UserController::class);
