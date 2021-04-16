@@ -42,7 +42,13 @@ class InviteController extends Controller
      */
     public function register(Request $request): array
     {
-        #Task-6
+        $request->validate([
+            'name'      => 'required',
+            'user_name' => 'required',
+            'password'  => 'required',
+            'pin'       => 'required'
+        ]);
+
         $invite = Invites::where('pin', $request->pin)->first();
         if (!$invite) {
             return ['message' => 'Sorry we cannot let you proceed.']; #Task-5
@@ -73,6 +79,9 @@ class InviteController extends Controller
     public function store(Request $request): array
     {
         #Task-2
+        $request->validate([
+            'email' => 'required'
+        ]);
 
         token:
         $token   = Str::random(10);
@@ -87,7 +96,7 @@ class InviteController extends Controller
         }
 
         $invite = Invites::create([
-            'email' => $request->get('email'),
+            'email' => $request->input('email'),
             'token' => $token
         ]);
 
@@ -110,7 +119,7 @@ class InviteController extends Controller
         $range     = $today - $startDate;
         $rand1     = rand(0, $range);
         $rand2     = rand(0, 600000);
-        
+
         return $value = ($rand1 + $rand2);
     }
 
