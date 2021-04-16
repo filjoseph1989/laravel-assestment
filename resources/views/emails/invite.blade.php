@@ -1,5 +1,5 @@
 <p>Hi,</p>
 
-<p>Someone has invited you to join our team.</p>
+<p>You been invited to join our team.</p>
 
-<a href="{{ route('accept', $invite->token) }}">Click here</a> to activate!
+<p>Copy this link: <strong>{{ route('process_invitation', $invite->token) }}</strong> to postman or other API app to start.</p> 
