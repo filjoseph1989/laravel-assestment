@@ -30,6 +30,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'user_name' => 'min:4|max:20'
+        ]);
+
         $user = User::find($id);
         $parameters = self::cleanParameters($request->all());
 
