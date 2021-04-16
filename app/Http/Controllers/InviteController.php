@@ -44,7 +44,7 @@ class InviteController extends Controller
     {
         $request->validate([
             'name'      => 'required',
-            'user_name' => 'required',
+            'user_name' => 'required|min:4|max:20',
             'password'  => 'required',
             'pin'       => 'required'
         ]);
