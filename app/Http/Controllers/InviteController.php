@@ -18,7 +18,7 @@ class InviteController extends Controller
      * @param  string $token
      * @return void
      */
-    public function processInvitation($token)
+    public function processInvitation(string $token): array
     {
         $invite = Invites::where('token', $token)->first();
         if (!$invite) {
@@ -40,7 +40,7 @@ class InviteController extends Controller
      * Do a registration
      * @param  Request $request
      */
-    public function register(Request $request)
+    public function register(Request $request): array
     {
         #Task-6
         $invite = Invites::where('pin', $request->pin)->first();
@@ -68,11 +68,9 @@ class InviteController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): array
     {
         #Task-2
 
@@ -112,6 +110,7 @@ class InviteController extends Controller
         $range     = $today - $startDate;
         $rand1     = rand(0, $range);
         $rand2     = rand(0, 600000);
+        
         return $value = ($rand1 + $rand2);
     }
 
