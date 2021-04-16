@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InviteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-xdebug_break();
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('accept/{token}', [InviteController::class, 'accept'])->name('accept');
