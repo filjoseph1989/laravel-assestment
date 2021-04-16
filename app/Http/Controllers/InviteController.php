@@ -46,7 +46,8 @@ class InviteController extends Controller
             'name'      => 'required',
             'user_name' => 'required|min:4|max:20',
             'password'  => 'required',
-            'pin'       => 'required'
+            'pin'       => 'required',
+            'avatar'    => 'required|mimes:png,jpg'
         ]);
 
         $invite = Invites::where('pin', $request->pin)->first();
@@ -54,7 +55,9 @@ class InviteController extends Controller
             return ['message' => 'Sorry we cannot let you proceed.']; #Task-5
         }
 
+        $file = $request->avatar->store('public/avatar');
         $user = $invite->fresh();
+
         User::create([
             'email'             => $user->email,
             'name'              => $request->name,
@@ -62,14 +65,13 @@ class InviteController extends Controller
             'password'          => Hash::make($request->password),
             'user_role'         => 'user',
             'registered_at'     => date("Y-m-d H:i:s"),
-            'email_verified_at' => date("Y-m-d H:i:s")
+            'email_verified_at' => date("Y-m-d H:i:s"),
+            'avatar'            => $file
         ]);
 
         $invite->delete();
 
-        return [
-            'message' => "Welcome {$request->name} Thank for joining us!"
-        ];
+        return ['message' => "Welcome {$request->name} Thank for joining us!"];
     }
 
     /**
@@ -89,6 +91,9 @@ class InviteController extends Controller
         if (!is_null($invited)) {
            goto token;
         }
+
+        # Task-10
+        # $request->input('email')
 
         $invited = Invites::where('email', '=', $request->input('email'))->first();
         if (!is_null($invited)) {
