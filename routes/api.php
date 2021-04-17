@@ -26,5 +26,5 @@ Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::resource('invite', InviteController::class);
     Route::resource('user', UserController::class);
-    Route::post('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });

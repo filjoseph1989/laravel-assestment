@@ -91,10 +91,7 @@ class InviteController extends Controller
             ], 401);
         }
 
-        #Task-2
-        $request->validate([
-            'email' => 'required'
-        ]);
+        $request->validate([ 'email' => 'required' ]);
 
         token:
         $token   = Str::random(10);
