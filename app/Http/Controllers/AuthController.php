@@ -14,11 +14,9 @@ class AuthController extends Controller
     /**
      * Login a user
      * @param  Request $request
-     * @return  string
      */
-    public function login(Request $request)
+    public function login(Request $request): object
     {
-        # Task-14
         $fields = $request->validate([
             'email'     => 'required|string',
             'password'  => 'required|string',
@@ -44,9 +42,9 @@ class AuthController extends Controller
      * Logout the user
      * @param  Request $request
      */
-    public function logout(Request $request): array
+    public function logout(Request $request): object
     {
         auth()->user()->tokens()->delete();
-        return ['message' => 'logged out successfully'];
+        return response(['message' => 'logged out successfully'], 200);
     }
 }
