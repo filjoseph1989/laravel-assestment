@@ -2,14 +2,18 @@
 
 namespace App\Http\Traits;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Invites;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 trait Registration
 {
-    public function register(Request $request)
+    /**
+     * Do the registration of user
+     * @param  Request $request
+     */
+    public function register(Request $request): object
     {
         $fields = [
             'name'      => 'required|string',
