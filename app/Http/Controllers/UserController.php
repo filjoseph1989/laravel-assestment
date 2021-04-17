@@ -30,9 +30,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        # Task-13
         $request->validate([
             'user_name' => 'min:4|max:20',
-            'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256'
+            'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256' # Task-12
         ]);
 
         $user = User::find($id);
