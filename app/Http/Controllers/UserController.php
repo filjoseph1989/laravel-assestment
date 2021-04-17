@@ -38,10 +38,9 @@ class UserController extends Controller
 
         $user = User::find($id);
         $parameters = self::cleanParameters($request->all());
-        extract($parameters);
-        $file = $avatar->store('public/avatar');
-        $parameters['avatar'] = $file;
 
+        extract($parameters);
+        $parameters['avatar'] = $avatar->store('public/avatar');
         $user->update($parameters);
 
         return [
