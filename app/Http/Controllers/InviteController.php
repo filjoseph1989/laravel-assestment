@@ -6,6 +6,7 @@ use App\Mail\InviteCreated;
 use App\Mail\Pin;
 use App\Models\Invites;
 use App\Models\User;
+use App\Http\Traits\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Mail;
 
 class InviteController extends Controller
 {
+    use Registration;
+
     /**
      * Process the user acceptance to the invitation
      * @param  string $token
@@ -34,49 +37,6 @@ class InviteController extends Controller
             "We sent a 6 Digit PIN to your email for confirmation, please have it along with your username and password on this link " . route('user.register');
 
         return ['message' => $message];
-    }
-
-    /**
-     * Do a registration
-     * @param  Request $request
-     */
-    public function register(Request $request): array
-    {
-        $request->validate([
-            'name'      => 'required',
-            'user_name' => 'required|min:4|max:20',
-            'password'  => 'required',
-            'pin'       => 'required',
-            'avatar'    => 'mimes:png,jpg|dimensions:min_width=256,min_height=256' # Task-11
-        ]);
-
-        $invite = Invites::where('pin', $request->pin)->first();
-        if (!$invite) {
-            return ['message' => 'Sorry we cannot let you proceed.']; #Task-5
-        }
-
-        $file = $request->avatar->store('public/avatar');
-        $user = $invite->fresh();
-
-        $user = User::create([
-            'email'             => $user->email,
-            'name'              => $request->name,
-            'user_name'         => $request->user_name,
-            'password'          => Hash::make($request->password),
-            'user_role'         => 'user',
-            'registered_at'     => date("Y-m-d H:i:s"),
-            'email_verified_at' => date("Y-m-d H:i:s"),
-            'avatar'            => $file
-        ]);
-
-        $token = $user->createToken('usertoken')->plainTextToken;
-
-        $invite->delete();
-
-        return [
-            'message' => "Welcome {$request->name} Thank for joining us!",
-            'token' => "Please write down your login token: {$token}"
-        ];
     }
 
     /**
