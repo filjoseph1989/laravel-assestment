@@ -31,7 +31,7 @@ class InviteController extends Controller
         );
 
         $message = "Thank you for taking time to accept our invitation. " .
-            "We sent a 6 Digit PIN to your email for confirmation, please have it along with your username and password on this link " . route('register');
+            "We sent a 6 Digit PIN to your email for confirmation, please have it along with your username and password on this link " . route('user.register');
 
         return ['message' => $message];
     }
@@ -47,7 +47,7 @@ class InviteController extends Controller
             'user_name' => 'required|min:4|max:20',
             'password'  => 'required',
             'pin'       => 'required',
-            'avatar'    => 'mimes:png,jpg|dimensions:min_width=256,min_height=256'
+            'avatar'    => 'mimes:png,jpg|dimensions:min_width=256,min_height=256' # Task-11
         ]);
 
         $invite = Invites::where('pin', $request->pin)->first();
@@ -58,7 +58,7 @@ class InviteController extends Controller
         $file = $request->avatar->store('public/avatar');
         $user = $invite->fresh();
 
-        User::create([
+        $user = User::create([
             'email'             => $user->email,
             'name'              => $request->name,
             'user_name'         => $request->user_name,
@@ -69,9 +69,14 @@ class InviteController extends Controller
             'avatar'            => $file
         ]);
 
+        $token = $user->createToken('usertoken')->plainTextToken;
+
         $invite->delete();
 
-        return ['message' => "Welcome {$request->name} Thank for joining us!"];
+        return [
+            'message' => "Welcome {$request->name} Thank for joining us!",
+            'token' => "Please write down your login token: {$token}"
+        ];
     }
 
     /**
@@ -80,6 +85,12 @@ class InviteController extends Controller
      */
     public function store(Request $request): array
     {
+        if (auth()->user()->user_role != 'admin') {
+            return response([
+                'message' => 'You are not allowed to make an invite'
+            ], 401);
+        }
+
         #Task-2
         $request->validate([
             'email' => 'required'
