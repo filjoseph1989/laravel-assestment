@@ -52,13 +52,6 @@ class InviteController extends Controller
 
         $request->validate([ 'email' => 'required' ]);
 
-        token:
-        $token   = Str::random(10);
-        $invited = Invites::where('token', '=', $token)->first();
-        if (!is_null($invited)) {
-           goto token;
-        }
-
         # Task-10
         # $request->input('email')
 
@@ -69,7 +62,7 @@ class InviteController extends Controller
 
         $invite = Invites::create([
             'email' => $request->input('email'),
-            'token' => $token
+            'token' => self::generateToken()
         ]);
 
         Mail::to(
@@ -111,5 +104,22 @@ class InviteController extends Controller
         ]);
 
         return $pin;
+    }
+
+    /**
+     * Return a token string
+     */
+    private function generateToken(): string
+    {
+        token:
+        $token = Str::random(10);
+
+        # Here we make sure that we record a unique token
+        $invited = Invites::where('token', '=', $token)->first();
+        if (!is_null($invited)) {
+           goto token;
+        }
+
+        return $token;
     }
 }
