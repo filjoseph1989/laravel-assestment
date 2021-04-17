@@ -39,7 +39,7 @@ class InviteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Initiate an invitation
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request): object
@@ -51,13 +51,14 @@ class InviteController extends Controller
         }
 
         $request->validate([ 'email' => 'required' ]);
+        $email = $request->input('email');
 
-        # Task-10
-        # $request->input('email')
+        if (self::isMember($email)) {
+           return response(['message' => 'This user is already a member in our system'], 200);
+        }
 
-        $invited = Invites::where('email', '=', $request->input('email'))->first();
-        if (!is_null($invited)) {
-           return ['message' => 'You already invited this person. Would you like to follow up instead?'];
+        if (self::isInvitated($email)) {
+           return response(['message' => 'You already invited this person. Would you like to follow up instead?'], 200);
         }
 
         $invite = Invites::create([
@@ -121,5 +122,32 @@ class InviteController extends Controller
         }
 
         return $token;
+    }
+
+    /**
+     * Return true|false if email exist in table
+     * invites
+     */
+    private function isInvitated($email): bool
+    {
+        $invited = Invites::where('email', $email)->first();
+        if (!is_null($invited)) {
+           return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return true|false if the given email has record
+     * is users table
+     * @param  string $email
+     */
+    private function isMember(string $email): bool
+    {
+        $member = User::where('email', $email)->first();
+        if (!is_null($member)) {
+           return true;
+        }
+        return false;
     }
 }
