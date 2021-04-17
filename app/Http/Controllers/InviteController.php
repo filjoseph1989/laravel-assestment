@@ -19,9 +19,8 @@ class InviteController extends Controller
     /**
      * Process the user acceptance to the invitation
      * @param  string $token
-     * @return void
      */
-    public function processInvitation(string $token): array
+    public function processInvitation(string $token): object
     {
         $invite = Invites::where('token', $token)->first();
         if (!$invite) {
@@ -36,14 +35,14 @@ class InviteController extends Controller
         $message = "Thank you for taking time to accept our invitation. " .
             "We sent a 6 Digit PIN to your email for confirmation, please have it along with your username and password on this link " . route('user.register');
 
-        return ['message' => $message];
+        return response(['message' => $message], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      * @param  \Illuminate\Http\Request  $request
      */
-    public function store(Request $request): array
+    public function store(Request $request): object
     {
         if (auth()->user()->user_role != 'admin') {
             return response([
@@ -79,7 +78,7 @@ class InviteController extends Controller
             new InviteCreated($invite)
         );
 
-        return ['message' => 'successfully sent an invitation'];
+        return response(['message' => 'successfully sent an invitation'], 200);
     }
 
     /**

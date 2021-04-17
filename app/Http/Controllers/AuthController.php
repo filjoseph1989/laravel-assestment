@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Traits\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Traits\Registration;
 
 class AuthController extends Controller
 {
