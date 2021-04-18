@@ -37,9 +37,12 @@ trait Registration
             $isAdmin = true;
         }
 
-        $file = $request->avatar->store('public/avatar');
+        if (isset($request->avatar)) {
+            $file = $request->avatar->store('public/avatar');
+            $fields['file'] = $file;
+        }
+
         $fields['isAdmin'] = $isAdmin;
-        $fields['file']    = $file;
 
         if ($isAdmin === true) {
             $user = self::createUser($fields);
@@ -79,7 +82,7 @@ trait Registration
             'user_role'         => $fields['isAdmin'] === false ? 'user' : 'admin',
             'registered_at'     => date("Y-m-d H:i:s"),
             'email_verified_at' => date("Y-m-d H:i:s"),
-            'avatar'            => $fields['file']
+            'avatar'            => $fields['file'] ?? ''
         ]);
     }
 }
