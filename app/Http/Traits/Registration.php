@@ -50,7 +50,7 @@ trait Registration
             $invite = Invites::where('pin', $request->pin)->first();
 
             if (!$invite) {
-                return ['message' => 'Sorry we cannot let you proceed.']; #Task-5
+                return response(['message' => 'Sorry we cannot let you proceed.'], 401); #Task-5
             }
 
             $user = $invite->fresh();
