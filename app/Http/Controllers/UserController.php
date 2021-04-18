@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (is_null($user)) {
-            return ['message' => 'Sorry, your not a registered as member!'];
+            return ['message' => 'Sorry, your not or that user is not registered member!'];
         }
 
         return $user;
@@ -41,14 +41,17 @@ class UserController extends Controller
         }
 
         $parameters = self::cleanParameters($request->all());
-
         extract($parameters);
-        $parameters['avatar'] = $avatar->store('public/avatar');
+
+        if (isset($avatar)) {
+            $parameters['avatar'] = $avatar->store('public/avatar');
+        }
+
         $user->update($parameters);
 
         return response([
             'message' => 'Successfully updated your profile',
-            'user' => $user
+            'user'    => $user
         ], 201);
     }
 
