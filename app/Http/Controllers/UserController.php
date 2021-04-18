@@ -26,26 +26,30 @@ class UserController extends Controller
      * Update the specified resource in storage.
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): object
     {
         $request->validate([
             'user_name' => 'min:4|max:20',
-            'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256' # Task-12
+            'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256'
         ]);
 
-        $user = User::find($id);
+        if (auth()->user()->user_role == 'admin') {
+            $user = User::find($id);
+        } else {
+            $user = auth()->user();
+        }
+
         $parameters = self::cleanParameters($request->all());
 
         extract($parameters);
         $parameters['avatar'] = $avatar->store('public/avatar');
         $user->update($parameters);
 
-        return [
-            'message' => 'You are on update',
+        return response([
+            'message' => 'Successfully updated your profile',
             'user' => $user
-        ];
+        ], 201);
     }
 
     /**
