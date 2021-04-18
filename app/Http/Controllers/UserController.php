@@ -82,6 +82,25 @@ class UserController extends Controller
     }
 
     /**
+     * Admin display all users
+     */
+    public function index(): object
+    {
+        if (auth()->user()->user_role != 'admin') {
+            return response([
+                'message' => "Sorry, you can't do that!"
+            ], 401);
+        }
+
+        $users = User::get();
+
+        return response([
+            'message' => "List all users!",
+            'users' => $users
+        ], 200);
+    }
+
+    /**
      * Remove others that is not needed to be updated
      * @param  array  $parameters
      */
