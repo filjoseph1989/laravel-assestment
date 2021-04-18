@@ -30,7 +30,6 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        # Task-13
         $request->validate([
             'user_name' => 'min:4|max:20',
             'avatar' => 'mimes:png,jpg|dimensions:min_width=256,min_height=256' # Task-12
@@ -47,6 +46,39 @@ class UserController extends Controller
             'message' => 'You are on update',
             'user' => $user
         ];
+    }
+
+    /**
+     * Destroy the user from user table
+     * @param  string $id
+     */
+    public function destroy(int $id): object
+    {
+        if (auth()->user()->user_role != 'admin') {
+            return response([
+                'message' => "Sorry, you can't do that!"
+            ], 401);
+        }
+
+        $userDeleted = User::find($id);
+        if (auth()->user()->email == $userDeleted->email) {
+            return response([
+                'message' => "Are you sure you want to delete your profile?"
+            ], 401);
+        }
+
+        $name = $userDeleted->name;
+        $userDeleted = $userDeleted->delete();
+
+        if (!$userDeleted) {
+            return response([
+                'message' => "Unsuccessfully deleted {$name} from the records"
+            ], 200);
+        }
+
+        return response([
+            'message' => "Successfully deleted {$name} from the records"
+        ], 200);
     }
 
     /**
