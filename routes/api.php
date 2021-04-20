@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\InviteController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,14 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('accept/{token}', [InviteController::class, 'processInvitation'])->name('process_invitation');
-Route::post('register', [InviteController::class, 'register'])->name('user.register');
-Route::post('login', [AuthController::class, 'login'])->name('user.login');
-Route::post('admin/register', [AuthController::class, 'register'])->name('admin.register');
-Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
-
-Route::group(['middleware' => ['auth:sanctum']], function() {
-    Route::resource('invite', InviteController::class);
-    Route::resource('user', UserController::class);
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
 });

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\InviteController;
 use Illuminate\Support\Facades\Route;
 
 /*
